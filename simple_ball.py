@@ -3,7 +3,6 @@ import time
 import random
 import threading
 
-is_exit = False
 is_resize_portrait = False
 is_resize_landscape = False
 
@@ -19,7 +18,7 @@ wall_portrait = random.randint(len(string_bar)+1, 31)
 wall_landscape = random.randint(3, 13)
 
 landscape = wall_landscape
-timeout = 0.05
+timeout = 0.06
 boolvar = False
 string_wall_portrait = "☰"
 string_wall_landspace = "║"
@@ -28,19 +27,24 @@ string_wall_landspace = "║"
 portrait = 1
 bool_ball_portrait = True
 
+def kill_process():
+    if hasattr(__import__('signal'), 'SIGKILL'):
+        __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGKILL)
+    else:
+        __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGABRT)
+    exit()
+
 ### AUTO RESIZE
 def __auto_resize__():
     threading.Thread(target=__wall_portrait__).start()
     threading.Thread(target=__wall_landscape__).start()
 
 def __wall_portrait__():
-    global wall_portrait, is_exit, timeout, is_resize_portrait
+    global wall_portrait, timeout, is_resize_portrait
     orig = wall_portrait
     try:
         time.sleep(3)
         while 1:
-            if is_exit:
-                return
             if random.randint(0, 1):
                 orig = random.randint(4, 35)
                 is_resize_portrait = True
@@ -56,13 +60,11 @@ def __wall_portrait__():
         return
 
 def __wall_landscape__():
-    global wall_landscape, is_exit, timeout, is_resize_landscape
+    global wall_landscape, timeout, is_resize_landscape
     orig = wall_landscape
     try:
         time.sleep(3)
         while 1:
-            if is_exit:
-                return
             if random.randint(0, 1):
                 orig = random.randint(2, 15)
                 is_resize_landscape = True
@@ -78,7 +80,7 @@ def __wall_landscape__():
         return
 
 def __random_place_bar__():
-    global tmp_place, is_exit
+    global tmp_place
     try:
         while 1:
             tmp_place = random.randint(2, len(string_bar))
@@ -87,12 +89,10 @@ def __random_place_bar__():
         return
 
 def __load_portrait_wall_up__():
-    global portrait_wall, is_exit, __string_wall_portrait_below__
-    timeout = globals()["timeout"] - int(globals()["timeout"] / 2)
+    global portrait_wall, __string_wall_portrait_below__
+    timeout = globals()["timeout"] - int(globals()["timeout"] / 3)
     try:
         while 1:
-            if is_exit:
-                return
             tmp = (wall_portrait + len(string_ball) + 2)
             if len(portrait_wall) < tmp:
                 portrait_wall.extend([string_wall_portrait] * int(tmp-len(portrait_wall)))
@@ -106,12 +106,10 @@ def __load_portrait_wall_up__():
         return
 
 # def __load_landscape_wall_left__():
-#     global landscape_wall_left, is_exit
+#     global landscape_wall_left
 #     timeout = globals()["timeout"] - int(globals()["timeout"] / 2)
 #     try:
 #         while 1:
-#             if is_exit:
-#                 return
 
 #             time.sleep(timeout)
 #     except KeyboardInterrupt:
@@ -221,5 +219,5 @@ except KeyboardInterrupt:
     stdout_2.clear()
     stdout_2.show_cursor()
     print("Created by KhanhNguyen9872!")
-is_exit = True
+kill_process()
 exit()
