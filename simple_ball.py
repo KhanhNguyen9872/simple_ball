@@ -18,7 +18,7 @@ wall_portrait = random.randint(len(string_bar)+1, 31)
 wall_landscape = random.randint(3, 13)
 
 landscape = wall_landscape
-timeout = 0.06
+timeout = 0.04
 boolvar = False
 string_wall_portrait = "☰"
 string_wall_landspace = "║"
@@ -138,11 +138,9 @@ try:
         __string_wall_portrait__ = " " + string_wall_landspace + "".join(portrait_wall) + string_wall_landspace
         __string_wall_landscape__ = " " + string_wall_landspace + string_wall_landspace + " " * (wall_portrait+len(string_ball)) + string_wall_landspace + string_wall_landspace + "\n"
 
-        stdout.write(__string_wall_portrait__ + "\n")
         tmp_color = random.choice(color[:-1])
 
-        # Ball
-        stdout.write(
+        ball_output = str(
             __string_wall_landscape__ * landscape
             + ( 
                 " " 
@@ -159,18 +157,23 @@ try:
             + __string_wall_landscape__ * (wall_landscape - landscape)
         )
 
-        # Bar
         tmp_value_bar = int(len(string_bar) / tmp_place)
         tmp_place_var = int(portrait - tmp_value_bar)
-        stdout.write(
-                " "
-                + " " * tmp_place_var
-                + __string_bar__
-                + color[-1]
-                + " " * (wall_portrait - portrait - tmp_value_bar)
-                + "\n"
+
+        bar_output = str(
+            " "
+            + " " * tmp_place_var
+            + __string_bar__
+            + color[-1]
+            + " " * (wall_portrait - portrait - tmp_value_bar)
+            + "\n"
         )
-        stdout.write(__string_wall_portrait_below__)
+
+        final_output = str(__string_wall_portrait__ + "\n" + ball_output + bar_output + __string_wall_portrait_below__)
+
+        time.sleep(timeout)
+        stdout.clear()
+        stdout.write(final_output)
 
         if landscape > wall_landscape:
             landscape -= 1
@@ -212,8 +215,6 @@ try:
             else:
                 portrait -= 1
 
-        time.sleep(timeout)
-        stdout.clear()
 except KeyboardInterrupt:
     stdout.clear()
     stdout_2.clear()
