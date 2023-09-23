@@ -176,6 +176,10 @@ try:
         if wall_landscape + 1 <= landscape:
             landscape -= 2
             if not boolvar:
+                combo += 1
+                point += 3 + int(combo / 2)
+                __string_bar__ = tmp_color + string_bar
+                
                 boolvar = not boolvar
         elif landscape > wall_landscape:
             landscape -= 1
