@@ -28,6 +28,7 @@ point = 0
 combo = 0
 portrait = 1
 bool_ball_portrait = True
+is_run_ball = 1
 
 def kill_process():
     if hasattr(__import__('signal'), 'SIGKILL'):
@@ -44,81 +45,62 @@ def __auto_resize__():
 def __wall_portrait__():
     global wall_portrait, timeout, is_resize_portrait
     orig = wall_portrait
-    try:
+    time.sleep(3)
+    while 1:
+        if random.randint(0, 1):
+            orig = random.randint(4, 35)
+            is_resize_portrait = True
+            while orig != wall_portrait:
+                if orig > wall_portrait:
+                    wall_portrait += 1
+                elif orig < wall_portrait:
+                    wall_portrait -= 1
+                time.sleep(timeout + 0.05)
+            is_resize_portrait = False
         time.sleep(3)
-        while 1:
-            if random.randint(0, 1):
-                orig = random.randint(4, 35)
-                is_resize_portrait = True
-                while orig != wall_portrait:
-                    if orig > wall_portrait:
-                        wall_portrait += 1
-                    elif orig < wall_portrait:
-                        wall_portrait -= 1
-                    time.sleep(timeout + 0.05)
-                is_resize_portrait = False
-            time.sleep(3)
-    except KeyboardInterrupt:
-        return
 
 def __wall_landscape__():
     global wall_landscape, timeout, is_resize_landscape
     orig = wall_landscape
-    try:
+    time.sleep(3)
+    while 1:
+        if random.randint(0, 1):
+            orig = random.randint(2, 15)
+            is_resize_landscape = True
+            while orig != wall_landscape:
+                if orig > wall_landscape:
+                    wall_landscape += 1
+                elif orig < wall_landscape:
+                    wall_landscape -= 1
+                time.sleep(timeout + 0.05)
+            is_resize_landscape = False
         time.sleep(3)
-        while 1:
-            if random.randint(0, 1):
-                orig = random.randint(2, 15)
-                is_resize_landscape = True
-                while orig != wall_landscape:
-                    if orig > wall_landscape:
-                        wall_landscape += 1
-                    elif orig < wall_landscape:
-                        wall_landscape -= 1
-                    time.sleep(timeout + 0.05)
-                is_resize_landscape = False
-            time.sleep(3)
-    except KeyboardInterrupt:
-        return
 
 def __random_place_bar__():
     global tmp_place
-    try:
-        while 1:
-            tmp_place = random.randint(2, len(string_bar))
-            time.sleep(1)
-    except KeyboardInterrupt:
-        return
+    while 1:
+        tmp_place = random.randint(2, len(string_bar))
+        time.sleep(1)
+
+def __random_speed_ball__():
+    global is_run_ball
+    while 1:
+        is_run_ball = random.randint(0, 1)
+        time.sleep(1)
 
 def __load_portrait_wall_up__():
     global portrait_wall, __string_wall_portrait_below__
     timeout = globals()["timeout"] - int(globals()["timeout"] / 3)
-    try:
-        while 1:
-            tmp = (wall_portrait + len(string_ball) + 2)
-            if len(portrait_wall) < tmp:
-                portrait_wall.extend([string_wall_portrait] * int(tmp-len(portrait_wall)))
-                __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
-            elif len(portrait_wall) > tmp:
-                portrait_wall = portrait_wall[:tmp]
-                __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
+    while 1:
+        tmp = (wall_portrait + len(string_ball) + 2)
+        if len(portrait_wall) < tmp:
+            portrait_wall.extend([string_wall_portrait] * int(tmp-len(portrait_wall)))
+            __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
+        elif len(portrait_wall) > tmp:
+            portrait_wall = portrait_wall[:tmp]
+            __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
 
-            time.sleep(timeout)
-    except KeyboardInterrupt:
-        return
-
-# def __load_landscape_wall_left__():
-#     global landscape_wall_left
-#     timeout = globals()["timeout"] - int(globals()["timeout"] / 2)
-#     try:
-#         while 1:
-
-#             time.sleep(timeout)
-#     except KeyboardInterrupt:
-#         return
-
-# def __load_landscape_wall_right__():
-#     pass
+        time.sleep(timeout)
 
 #### MAIN
 stdout_2.hide_cursor()
@@ -133,8 +115,7 @@ try:
     tmp_color = None
     threading.Thread(target=__auto_resize__).start()
     threading.Thread(target=__load_portrait_wall_up__).start()
-    # threading.Thread(target=__load_landscape_wall_left__).start()
-    # threading.Thread(target=__load_landscape_wall_right__).start()
+    threading.Thread(target=__random_speed_ball__).start()
     threading.Thread(target=__random_place_bar__).start()
 
     while 1:
@@ -219,18 +200,15 @@ try:
             portrait += 1
         else:
             if ((portrait == wall_portrait) and (not is_resize_portrait)) or (portrait == 0):
-                # if bool_ball_portrait:
-                #     # landscape_wall_left[landscape] = tmp_color + string_wall_landscape + color[-1]
-                #     pass
-                # else:
-                #     # landscape_wall_right[landscape] = tmp_color + string_wall_landscape + color[-1]
-                #     pass
-
                 bool_ball_portrait = not bool_ball_portrait
-            if bool_ball_portrait:
-                portrait += 1
+
+            if is_run_ball:
+                if bool_ball_portrait:
+                    portrait += 1
+                else:
+                    portrait -= 1
             else:
-                portrait -= 1
+                is_run_ball = 1
 
 except KeyboardInterrupt:
     stdout.clear()
