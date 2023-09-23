@@ -24,6 +24,8 @@ string_wall_portrait = "☰"
 string_wall_landspace = "║"
 
 #### Ball
+point = 0
+combo = 0
 portrait = 1
 bool_ball_portrait = True
 
@@ -158,6 +160,18 @@ try:
             + __string_wall_landscape__ * (wall_landscape - landscape)
         )
 
+        tmp_p = (wall_portrait+len(string_ball))
+        point_output = str(
+            "| SCORE: {} | Combo: {} |".format(point, combo)
+        )
+
+        if len(point_output) >= tmp_p:
+            tmp_p = ""
+        else:
+            tmp_p = " " * int(tmp_p/5)
+
+        point_output = "\n\n" + tmp_p + point_output
+
         tmp_value_bar = int(len(string_bar) / tmp_place)
         tmp_place_var = int(portrait - tmp_value_bar)
 
@@ -170,7 +184,7 @@ try:
             + "\n"
         )
 
-        final_output = str(__string_wall_portrait__ + "\n" + ball_output + bar_output + __string_wall_portrait_below__)
+        final_output = str(__string_wall_portrait__ + "\n" + ball_output + bar_output + __string_wall_portrait_below__ + point_output)
 
         time.sleep(timeout)
         stdout.clear()
@@ -188,6 +202,8 @@ try:
                     except IndexError:
                         portrait_wall[portrait] = tmp_color + string_wall_portrait + color[-1]
                 else:
+                    combo += 1
+                    point += 3 + int(combo / 2)
                     __string_bar__ = tmp_color + string_bar
 
                 boolvar = not boolvar
