@@ -175,7 +175,7 @@ try:
 
         if wall_landscape + 1 <= landscape:
             landscape -= 2
-            if boolvar:
+            if not boolvar:
                 boolvar = not boolvar
         elif landscape > wall_landscape:
             landscape -= 1
