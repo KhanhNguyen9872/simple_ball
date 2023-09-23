@@ -39,10 +39,12 @@ class stdout:
         except IndexError:
             return None
 
-        for _ in range(len(self.full_str[:-1].split("\n"))):
-            self.stdout.write("\x1b[1A\x1b[2K")
-            self.flush()
+        tmp = len(self.full_str[:-1].split("\n"))
         self.reset()
+
+        for _ in range(tmp):
+            self.stdout.write("\x1b[1A\x1b[2K")
+        self.flush()
 
     def reset(self) -> None:
         self.full_str = ""

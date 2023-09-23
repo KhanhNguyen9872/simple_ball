@@ -18,7 +18,7 @@ wall_portrait = random.randint(len(string_bar)+1, 31)
 wall_landscape = random.randint(3, 13)
 
 landscape = wall_landscape
-timeout = 0.04
+timeout = 0.05
 boolvar = False
 string_wall_portrait = "☰"
 string_wall_landspace = "║"
@@ -134,6 +134,7 @@ try:
     # threading.Thread(target=__load_landscape_wall_left__).start()
     # threading.Thread(target=__load_landscape_wall_right__).start()
     threading.Thread(target=__random_place_bar__).start()
+
     while 1:
         __string_wall_portrait__ = " " + string_wall_landspace + "".join(portrait_wall) + string_wall_landspace
         __string_wall_landscape__ = " " + string_wall_landspace + string_wall_landspace + " " * (wall_portrait+len(string_ball)) + string_wall_landspace + string_wall_landspace + "\n"
