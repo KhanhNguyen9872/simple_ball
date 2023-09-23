@@ -173,7 +173,11 @@ try:
         stdout.clear()
         stdout.write(final_output)
 
-        if landscape > wall_landscape:
+        if wall_landscape + 1 <= landscape:
+            landscape -= 2
+            if boolvar:
+                boolvar = not boolvar
+        elif landscape > wall_landscape:
             landscape -= 1
         elif landscape < 0:
             landscape += 1
