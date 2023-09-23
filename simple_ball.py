@@ -89,16 +89,16 @@ def __random_speed_ball__():
         time.sleep(1)
 
 def __load_portrait_wall_up__():
-    global portrait_wall, __string_wall_portrait_below__, string_wall_landspace, string_wall_landsp
+    global portrait_wall, __string_wall_portrait_below__, string_wall_landspace_left, string_wall_landspace_right, string_wall_landsp
     timeout = globals()["timeout"] - int(globals()["timeout"] / 3)
     while 1:
         tmp = (wall_portrait + len(string_ball) + 2)
         if len(portrait_wall) < tmp:
             portrait_wall.extend([string_wall_portrait] * int(tmp-len(portrait_wall)))
-            __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
+            __string_wall_portrait_below__ = str(" " + string_wall_landspace_left + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace_right
         elif len(portrait_wall) > tmp:
             portrait_wall = portrait_wall[:tmp]
-            __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
+            __string_wall_portrait_below__ = str(" " + string_wall_landspace_left + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace_right
 
         time.sleep(timeout)
 
@@ -109,8 +109,9 @@ stdout_2.write("\n>> Hello World!\n>> Hey! What are you doing?\n\n[Ctrl + C] -> 
 
 try:
     __string_bar__ = color[-1] + string_bar
-    string_wall_landspace = string_wall_landsp
-    __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
+    string_wall_landspace_left = string_wall_landsp
+    string_wall_landspace_right = string_wall_landsp
+    __string_wall_portrait_below__ = str(" " + string_wall_landspace_left + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace_right
     portrait_wall = [string_wall_portrait] * (wall_portrait + len(string_ball) + 2)
     tmp_place = 2
     tmp_color = None
@@ -120,8 +121,8 @@ try:
     threading.Thread(target=__random_place_bar__).start()
 
     while 1:
-        __string_wall_portrait__ = " " + string_wall_landspace + "".join(portrait_wall) + string_wall_landspace
-        __string_wall_landscape__ = " " + string_wall_landspace + string_wall_landspace + " " * (wall_portrait+len(string_ball)) + string_wall_landspace + string_wall_landspace + "\n"
+        __string_wall_portrait__ = " " + string_wall_landspace_left + "".join(portrait_wall) + string_wall_landspace_right
+        __string_wall_landscape__ = " " + string_wall_landspace_left + string_wall_landspace_left + " " * (wall_portrait+len(string_ball)) + string_wall_landspace_right + string_wall_landspace_right + "\n"
 
         tmp_color = random.choice(color[:-1])
 
@@ -129,14 +130,14 @@ try:
             __string_wall_landscape__ * landscape
             + ( 
                 " " 
-                + string_wall_landspace
-                + string_wall_landspace
+                + string_wall_landspace_left
+                + string_wall_landspace_left
                 + " " * portrait
                 + tmp_color 
                 + string_ball
                 + color[-1]
                 + " " * (wall_portrait - portrait)
-                + (f"{string_wall_landspace}{string_wall_landspace}" if wall_portrait + 1 > portrait else f"{string_wall_landspace}{string_wall_landspace}<<==") 
+                + (f"{string_wall_landspace_right}{string_wall_landspace_right}" if wall_portrait + 1 > portrait else f"{string_wall_landspace_right}{string_wall_landspace_right}<<==") 
                 + "\n"
             ) 
             + __string_wall_landscape__ * (wall_landscape - landscape)
@@ -201,7 +202,10 @@ try:
             portrait += 1
         else:
             if ((portrait == wall_portrait) and (not is_resize_portrait)) or (portrait == 0):
-                string_wall_landspace = tmp_color + string_wall_landsp + color[-1]
+                if not bool_ball_portrait:
+                    string_wall_landspace_left = tmp_color + string_wall_landsp + color[-1]
+                else:
+                    string_wall_landspace_right = tmp_color + string_wall_landsp + color[-1]
                 bool_ball_portrait = not bool_ball_portrait
 
             if is_run_ball:
