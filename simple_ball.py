@@ -196,7 +196,11 @@ try:
                 landscape += 1
 
         # Ball
-        if portrait > wall_portrait:
+        if wall_portrait + 1 <= portrait:
+            portrait -= 2
+            if bool_ball_portrait:
+                bool_ball_portrait = not bool_ball_portrait
+        elif portrait > wall_portrait:
             portrait -= 1
         elif portrait < 0:
             portrait += 1
