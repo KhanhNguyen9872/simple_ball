@@ -21,7 +21,7 @@ landscape = wall_landscape
 timeout = 0.05
 boolvar = False
 string_wall_portrait = "☰"
-string_wall_landspace = "║"
+string_wall_landsp = "║"
 
 #### Ball
 point = 0
@@ -89,7 +89,7 @@ def __random_speed_ball__():
         time.sleep(1)
 
 def __load_portrait_wall_up__():
-    global portrait_wall, __string_wall_portrait_below__
+    global portrait_wall, __string_wall_portrait_below__, string_wall_landspace, string_wall_landsp
     timeout = globals()["timeout"] - int(globals()["timeout"] / 3)
     while 1:
         tmp = (wall_portrait + len(string_ball) + 2)
@@ -109,6 +109,7 @@ stdout_2.write("\n>> Hello World!\n>> Hey! What are you doing?\n\n[Ctrl + C] -> 
 
 try:
     __string_bar__ = color[-1] + string_bar
+    string_wall_landspace = string_wall_landsp
     __string_wall_portrait_below__ = str(" " + string_wall_landspace + string_wall_portrait * (wall_portrait + len(string_ball) + 2)) + string_wall_landspace
     portrait_wall = [string_wall_portrait] * (wall_portrait + len(string_ball) + 2)
     tmp_place = 2
@@ -200,6 +201,7 @@ try:
             portrait += 1
         else:
             if ((portrait == wall_portrait) and (not is_resize_portrait)) or (portrait == 0):
+                string_wall_landspace = tmp_color + string_wall_landsp + color[-1]
                 bool_ball_portrait = not bool_ball_portrait
 
             if is_run_ball:
