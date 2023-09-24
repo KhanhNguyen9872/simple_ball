@@ -2,26 +2,35 @@ import khanhnguyen9872
 import time
 import random
 import threading
+import sys
+
+stdout = khanhnguyen9872.stdout()
+stdout_2 = khanhnguyen9872.stdout()
+
+timeout = 0.03
+string_ball = "●"
+string_bar = "▀▀▀▀▀"
+string_wall_portrait = "☰"
+string_wall_landsp = "║"
 
 is_resize_portrait = False
 is_resize_landscape = False
 
 color = ["\033[94m", "\033[96m", "\033[35m", "\033[36m", "\033[92m", "\033[93m", "\033[91m", "\033[95m", "\033[0m"]
 
-stdout = khanhnguyen9872.stdout()
-stdout_2 = khanhnguyen9872.stdout()
+timeout_string = [
+    0.08,
+    0.06,
+    0.028,
+    0.008,
+    0.0035,
+]
 
-string_ball = "●"
-string_bar = "▀▀▀▀▀"
-
-wall_portrait = random.randint(len(string_bar)+1, 31)
-wall_landscape = random.randint(3, 13)
+wall_portrait = random.randint(len(string_bar)+1, 41)
+wall_landscape = random.randint(3, 17)
 
 landscape = wall_landscape
-timeout = 0.05
 boolvar = False
-string_wall_portrait = "☰"
-string_wall_landsp = "║"
 
 #### Ball
 point = 0
@@ -35,6 +44,15 @@ def kill_process():
         __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGKILL)
     else:
         __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGABRT)
+    __import__('builtins').exit()
+
+def exit_main():
+    global stdout, stdout_2
+    stdout.clear()
+    stdout_2.clear()
+    stdout_2.show_cursor()
+    stdout_2.print(color[-1] + "Created by KhanhNguyen9872!")
+    kill_process()
     __import__('builtins').exit()
 
 ### AUTO RESIZE
@@ -111,6 +129,32 @@ def __load_portrait_wall_up__():
 
 #### MAIN
 stdout_2.hide_cursor()
+
+py_ver=str(".".join(sys.version.split(" ")[0].split(".")[:-1]))
+try:
+    # if int(py_ver.split(".")[1]) > 10:
+    #     stdout_2.write("\033[91m" + "WARNING: Recommended to run at version 3.10 or lower for best performance!\n         Your Python is {0}!\n".format(py_ver))
+
+    while 1:
+        stdout.write(random.choice(color[:-1]) + "\n> Choose Timeout: \n  0. Normal\n")
+
+        for _ in range(0, len(timeout_string)):
+            stdout.print(random.choice(color[:-1]) + "  {}. {} ms ".format(int(_)+1, timeout_string[_]))
+
+        stdout.write(random.choice(color[:-1]) + "\n>> Choose: " + random.choice(color[:-1]))
+        choose = str(input()).lower()
+        stdout.write(color[-1])
+        stdout.clear(1)
+        if choose == "0":
+            break
+        try:
+            timeout = timeout_string[int(choose)]
+            break
+        except (IndexError, ValueError):
+            pass
+except KeyboardInterrupt:
+    exit_main()
+
 stdout_2.write(color[-1])
 stdout_2.write("\n>> Hello World!\n>> Hey! What are you doing?\n\n[Ctrl + C] -> EXIT\n\n")
 
@@ -187,7 +231,7 @@ try:
             landscape -= 2
             if not boolvar:
                 combo += 1
-                point += 3 + int(combo / 2)
+                point += 2 + int(combo / 5)
                 __string_bar__ = tmp_color + string_bar
                 
                 boolvar = not boolvar
@@ -239,9 +283,4 @@ try:
                 is_run_ball = 1
 
 except KeyboardInterrupt:
-    stdout.clear()
-    stdout_2.clear()
-    stdout_2.show_cursor()
-    print("Created by KhanhNguyen9872!")
-kill_process()
-exit()
+    exit_main()

@@ -32,14 +32,14 @@ class stdout:
         self.flush()
         self.full_str += string
 
-    def clear(self) -> None:
+    def clear(self, add_line = 0) -> None:
         try:
             if self.full_str[-1] != "\n":
                 self.stdout.write("\n")
         except IndexError:
             return None
 
-        tmp = len(self.full_str[:-1].split("\n"))
+        tmp = len(self.full_str[:-1].split("\n")) + add_line
         self.reset()
 
         for _ in range(tmp):
