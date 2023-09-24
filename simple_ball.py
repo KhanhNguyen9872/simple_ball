@@ -35,7 +35,7 @@ def kill_process():
         __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGKILL)
     else:
         __import__('os').kill(__import__('os').getpid(), __import__('signal').SIGABRT)
-    exit()
+    __import__('builtins').exit()
 
 ### AUTO RESIZE
 def __auto_resize__():
@@ -82,6 +82,13 @@ def __random_place_bar__():
         tmp_place = random.randint(2, len(string_bar))
         time.sleep(1)
 
+def __check_FPS__():
+    global FPS, tmp_fps
+    while 1:
+        FPS = int(tmp_fps)
+        tmp_fps = 0
+        time.sleep(1)
+
 def __random_speed_ball__():
     global is_run_ball
     while 1:
@@ -108,6 +115,8 @@ stdout_2.write(color[-1])
 stdout_2.write("\n>> Hello World!\n>> Hey! What are you doing?\n\n[Ctrl + C] -> EXIT\n\n")
 
 try:
+    FPS = 0
+    tmp_fps = 0
     __string_bar__ = color[-1] + string_bar
     string_wall_landspace_left = string_wall_landsp
     string_wall_landspace_right = string_wall_landsp
@@ -119,7 +128,7 @@ try:
     threading.Thread(target=__load_portrait_wall_up__).start()
     threading.Thread(target=__random_speed_ball__).start()
     threading.Thread(target=__random_place_bar__).start()
-
+    threading.Thread(target=__check_FPS__).start()
     while 1:
         __string_wall_portrait__ = " " + string_wall_landspace_left + "".join(portrait_wall) + string_wall_landspace_right
         __string_wall_landscape__ = " " + string_wall_landspace_left + string_wall_landspace_left + " " * (wall_portrait+len(string_ball)) + string_wall_landspace_right + string_wall_landspace_right + "\n"
@@ -145,7 +154,7 @@ try:
 
         tmp_p = (wall_portrait+len(string_ball))
         point_output = str(
-            "| SCORE: {} | Combo: {} |".format(point, combo)
+            "| FPS: {} | SCORE: {} | Combo: {} |".format(FPS, point, combo)
         )
 
         if len(point_output) >= tmp_p:
@@ -173,6 +182,7 @@ try:
         stdout.clear()
         stdout.write(final_output)
 
+        tmp_fps += 1
         if wall_landscape + 1 <= landscape:
             landscape -= 2
             if not boolvar:
